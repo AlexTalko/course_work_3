@@ -49,10 +49,11 @@ def get_trans_data(trans_data):
     """
     number_data = trans_data.split()[-1]
     name_data = trans_data.split()[:-1]
-    if name_data[0] != "Счет":
-        number_data = f'{number_data[:4]} {number_data[5:7]}** {(len(number_data[8: -4]) * "*")} {number_data[-4:]}'
     if name_data[0] == "Счет":
         number_data = "**" + number_data[-4:]
+    if name_data[0] != "Счет":
+        number_data = f'{number_data[:4]} {number_data[5:7]}** {(len(number_data[8: -4]) * "*")} {number_data[-4:]}'
+
     return f"{" ".join(name_data)} {number_data}"
 
 
@@ -61,8 +62,8 @@ def get_from_to(trans_description):
         Выводит адрес(откуда -> куда) транзакции с маскировкой данных.
     """
     if trans_description["description"] != "Открытие вклада":
-        data_description = get_trans_data(trans_description["from"]) + " -> " + trans_description["to"]
+        data_description = get_trans_data(trans_description["from"]) + " -> " + get_trans_data(trans_description["to"])
 
     if trans_description["description"] == "Открытие вклада":
-        data_description = trans_description["to"]
-    return f"{trans_description["description"]}\n{get_trans_data(data_description)}"
+        data_description = get_trans_data(trans_description["to"])
+    return f"{trans_description["description"]}\n{data_description}"
